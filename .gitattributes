@@ -1,3 +1,0 @@
-SDF.asset filter=lfs diff=lfs merge=lfs -text
-MPLUSRounded1c-Regular filter=lfs diff=lfs merge=lfs -text
-NotoSansJP-Regular filter=lfs diff=lfs merge=lfs -text
