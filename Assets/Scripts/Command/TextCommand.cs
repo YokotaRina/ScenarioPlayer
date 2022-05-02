@@ -38,8 +38,12 @@ namespace Command
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        public TextCommand(CommandType commandType) : base(commandType)
+        public TextCommand(CommandType commandType, string text, string name, int size, string color) : base(commandType)
         {
+            _text = text;
+            _name = name;
+            _size = size;
+            _color = color;
         }
 
         /// <summary>
