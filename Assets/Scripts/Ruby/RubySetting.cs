@@ -37,5 +37,22 @@ namespace Ruby
             _targetText = targetText;
             _rubyText = rubyText;
         }
+
+        /// <summary>
+        /// 開始・終了タグの設定
+        /// </summary>
+        public void SetTag(string startTag, string endTag)
+        {
+            _rubyStartTag = startTag;
+            _rubyEndTag = endTag;
+        }
+
+        /// <summary>
+        /// ルビ表示用の文字列取得
+        /// </summary>
+        public string GetRubyText()
+        {
+            return $"{_targetText}{_rubyStartTag}{_rubyText}{_rubyEndTag}";
+        }
     }
 }
