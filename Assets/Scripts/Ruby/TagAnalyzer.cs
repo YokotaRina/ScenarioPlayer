@@ -1,13 +1,12 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using UnityEngine;
 
 namespace Ruby
 {
     /// <summary>
     /// タグの解析用クラス
     /// </summary>
-    public class TagAnalyzer : MonoBehaviour
+    public class TagAnalyzer
     {
         // ルビタグ名
         const string TEXT_TAG_RUBY = "ruby";
@@ -19,24 +18,16 @@ namespace Ruby
         const int NO_TAG_GROUP = 5;
 
         /// <summary>
-        /// Start
-        /// </summary>
-        private void Start()
-        {
-            // テスト
-            GetRubySettingList("<ruby=ルビだよ>ここにルビ</ruby>を振ります。");
-        }
-
-        /// <summary>
         /// ルビ設定用のリストを作成する
         /// </summary>
-        public List<RubySetting> GetRubySettingList(string text)
+        public static List<RubySetting> GetRubySettingList(string text)
         {
+            var settingList = new List<RubySetting>();
+            if (!text.Contains(TEXT_TAG_RUBY)) return settingList;
+
             // タグとそれ以外でグループを分けてマッチさせる
             // ※拡張性を持たせるため、ルビタグ以外もマッチできるようにしておく
             var matchCollection = Regex.Matches(text, @"(<(.*?)(=.*?)?>([\s\S]*?)<\/\2>|([^<]+))");
-
-            var settingList = new List<RubySetting>();
 
             foreach (Match match in matchCollection)
             {
@@ -51,8 +42,7 @@ namespace Ruby
                 if (tag.Contains(TEXT_TAG_RUBY))
                 {
                     // ルビに不要な文字列を消す
-                    // TODO:開始タグと終了タグの設定
-                    var rubyText = tag.Replace("ruby=", "");
+                    var rubyText = tag.Replace($"{TEXT_TAG_RUBY}=", "");
                     var rubySetting = new RubySetting(targetText, rubyText);
                     settingList.Add(rubySetting);
                 }
