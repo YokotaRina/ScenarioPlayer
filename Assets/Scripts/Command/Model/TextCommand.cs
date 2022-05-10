@@ -1,6 +1,7 @@
 using Command.Enum;
+using JetBrains.Annotations;
 
-namespace Command
+namespace Command.Model
 {
     /// <summary>
     /// テキスト表示コマンドの管理クラス
@@ -21,12 +22,14 @@ namespace Command
 
         /// <summary>
         /// テキストサイズ
+        /// ※0の場合はデフォルト
         /// </summary>
         private readonly int _size;
         public int Size => _size;
 
         /// <summary>
         /// テキストカラー
+        /// ※空の場合はデフォルト
         /// </summary>
         private readonly string _color;
         public string Color => _color;
@@ -38,7 +41,7 @@ namespace Command
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        public TextCommand(CommandType commandType, string text, string name, int size, string color) : base(commandType)
+        public TextCommand(AdvCommandType advCommandType, string text, string name, int size, string color) : base(advCommandType)
         {
             _text = text;
             _name = name;

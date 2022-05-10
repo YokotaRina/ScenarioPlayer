@@ -23,6 +23,6 @@ namespace Command.Enum
         Voice = 4,
 
         [Display(Name = "エフェクト再生")]
-        BGM = 5,
+        Effect = 5,
     }
 }

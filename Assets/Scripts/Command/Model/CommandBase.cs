@@ -1,6 +1,6 @@
 using Command.Enum;
 
-namespace Command
+namespace Command.Model
 {
     /// <summary>
     /// コマンドのベースクラス
@@ -11,15 +11,15 @@ namespace Command
         /// <summary>
         /// コマンドの種類
         /// </summary>
-        private readonly CommandType _commandType;
-        public CommandType CommandType => _commandType;
+        private readonly AdvCommandType _advCommandType;
+        public AdvCommandType AdvCommandType => _advCommandType;
 
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        protected CommandBase(CommandType commandType)
+        protected CommandBase(AdvCommandType advCommandType)
         {
-            _commandType = commandType;
+            _advCommandType = advCommandType;
         }
 
         /// <summary>
