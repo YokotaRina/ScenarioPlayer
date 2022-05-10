@@ -4,12 +4,12 @@ using System.IO;
 using System.Text.RegularExpressions;
 using UnityEngine;
 
-namespace CsvReader
+namespace Csv
 {
     /// <summary>
     /// CSVの読み込み
     /// </summary>
-    public class CsvReader : MonoBehaviour
+    public class CsvReader : IDisposable
     {
         /// <summary>
         /// コメントコマンド判定用
@@ -26,15 +26,10 @@ namespace CsvReader
         /// </summary>
         private readonly List<string[]> _dataList = new List<string[]>();
 
-        private void Start()
-        {
-            Load("TestAdv.csv");
-        }
-
         /// <summary>
-        /// 読み込み
+        /// 正規化
         /// </summary>
-        private void Load(string fileName)
+        public void Normalize(string fileName)
         {
             _fileName = fileName;
 
@@ -70,11 +65,6 @@ namespace CsvReader
                     continue;
                 }
 
-                // コンソールに出力する
-                // foreach (string value in valueList)
-                // {
-                //     UnityEngine.Debug.LogError(value);
-                // }
                 _dataList.Add(valueList);
                 line = "";
             }
@@ -139,6 +129,14 @@ namespace CsvReader
                 Debug.LogError($"[{ex}]:{_fileName}_{row+1}行目_{column+1}列目のCSVのデータ取得に失敗しました");
             }
             return value;
+        }
+
+        /// <summary>
+        /// Dispose
+        /// </summary>
+        public void Dispose()
+        {
+            _dataList.Clear();
         }
     }
 }

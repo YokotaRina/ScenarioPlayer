@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Command.Enum;
 
-namespace Command
+namespace Command.Model
 {
     /// <summary>
     /// 選択肢コマンドの管理クラス
@@ -47,13 +47,13 @@ namespace Command
         /// コンストラクタ
         /// </summary>
         public SelectCommand(
-            CommandType commandType,
+            AdvCommandType advCommandType,
             List<Tuple<string, string>> choiceWordList,
             string text,
             string characterId,
             string voiceId,
             string effectId
-        ) : base(commandType)
+        ) : base(advCommandType)
         {
             _choiceWordList = choiceWordList;
             _text = text;

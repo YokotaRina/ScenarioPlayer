@@ -1,6 +1,6 @@
 using Command.Enum;
 
-namespace Command
+namespace Command.Model
 {
     /// <summary>
     /// キャラクター表示コマンドの管理クラス
@@ -22,13 +22,13 @@ namespace Command
         /// <summary>
         /// 表示位置ID
         /// </summary>
-        private readonly int _positionId;
-        public int PositionId => _positionId;
+        private readonly string _positionId;
+        public string PositionId => _positionId;
 
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        public CharacterCommand(CommandType commandType, string id, string patternId, int positionId) : base(commandType)
+        public CharacterCommand(AdvCommandType advCommandType, string id, string patternId, string positionId) : base(advCommandType)
         {
             _id = id;
             _patternId = patternId;

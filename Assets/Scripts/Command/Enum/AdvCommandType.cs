@@ -5,7 +5,7 @@ namespace Command.Enum
     /// <summary>
     /// コマンドの種類
     /// </summary>
-    public enum CommandType
+    public enum AdvCommandType
     {
         [Display(Name = "指定なし")]
         None = 0,
