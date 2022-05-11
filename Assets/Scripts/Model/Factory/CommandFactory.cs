@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
-using Command.Model;
-using Command.Enum;
+using Enums;
+using Model.Command;
+using Repository;
 using UnityEngine;
 
-namespace Command
+namespace Model.Factory
 {
     /// <summary>
     /// コマンド生成クラス

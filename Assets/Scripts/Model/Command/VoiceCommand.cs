@@ -1,24 +1,24 @@
-using Command.Enum;
+using Enums;
 
-namespace Command.Model
+namespace Model.Command
 {
     /// <summary>
-    /// ジャンプコマンドの管理クラス
+    /// ボイス再生コマンドの管理クラス
     /// </summary>
-    public class JumpCommand : CommandBase
+    public class VoiceCommand : CommandBase
     {
         /// <summary>
-        /// ジャンプ地点のID
+        /// 再生ボイスID
         /// </summary>
-        private readonly string _jumpPointId;
-        public string JumpPointId => _jumpPointId;
+        private readonly string _id;
+        public string Id => _id;
 
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        public JumpCommand(AdvCommandType advCommandType, string jumpPointId) : base(advCommandType)
+        public VoiceCommand(AdvCommandType advCommandType, string id) : base(advCommandType)
         {
-            _jumpPointId = jumpPointId;
+            _id = id;
         }
 
         /// <summary>

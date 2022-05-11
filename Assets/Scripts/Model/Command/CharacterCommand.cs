@@ -1,6 +1,6 @@
-using Command.Enum;
+using Enums;
 
-namespace Command.Model
+namespace Model.Command
 {
     /// <summary>
     /// キャラクター表示コマンドの管理クラス

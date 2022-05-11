@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using Command.Enum;
+using Enums;
 
-namespace Command.Model
+namespace Model.Command
 {
     /// <summary>
     /// 選択肢コマンドの管理クラス

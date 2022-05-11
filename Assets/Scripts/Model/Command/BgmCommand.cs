@@ -1,6 +1,6 @@
-using Command.Enum;
+using Enums;
 
-namespace Command.Model
+namespace Model.Command
 {
     /// <summary>
     /// BGM再生コマンドの管理クラス
