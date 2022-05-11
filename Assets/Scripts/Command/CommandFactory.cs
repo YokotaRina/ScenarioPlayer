@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using Command.Model;
 using Command.Enum;
-using Csv;
 using UnityEngine;
 
 namespace Command
@@ -10,81 +9,46 @@ namespace Command
     /// <summary>
     /// コマンド生成クラス
     /// </summary>
-    public class CommandFactory : MonoBehaviour
+    public class CommandFactory
     {
         /// <summary>
-        /// csv読み込み用クラス
+        /// 中間データからコマンドリストを生成する
         /// </summary>
-        private CsvReader _csvReader;
-
-        /// <summary>
-        /// Start
-        /// </summary>
-        private void Start()
-        {
-            _csvReader = new CsvReader();
-        }
-
-        /// <summary>
-        /// コマンドの一覧を取得
-        /// </summary>
-        /// <returns></returns>
-        public List<CommandBase> GetCommandList()
+        public List<CommandBase> CreateCommandList(List<CommandRepository.CommandIntermediateData> intermediateDataList)
         {
             var list = new List<CommandBase>();
-            _csvReader.Normalize("TestAdv.csv");
+            if (intermediateDataList == null || intermediateDataList.Count == 0) return list;
 
-            var rowDataNum = _csvReader.GetRowDataNum();
-            var columnDataNun = _csvReader.GetColumnDataNum();
-
-            // 選択肢コマンド用
-            var selectCommandValueList = new List<string[]>();
-            for (int row = 0; row < rowDataNum; row++)
+            // 中間データからコマンドリストを生成する
+            foreach (var intermediateData in intermediateDataList)
             {
-                var rowDataList = _csvReader.GetData(row);
-
-                var enumValue = rowDataList[0];
-                AdvCommandType type = AdvCommandType.None;
-                if (string.IsNullOrEmpty(enumValue) ||
-                    !System.Enum.TryParse(enumValue, out type) ||
-                    !System.Enum.IsDefined(typeof(AdvCommandType), type))
-                {
-                    // コマンドの識別ができない場合は何もしない
-                    continue;
-                }
-
-                // 選択肢コマンドは複数行になっているのでSelectEndコマンドが出現するまで値を保持
-                if (type == AdvCommandType.Select)
-                {
-                    selectCommandValueList.Add(rowDataList);
-                    continue;
-                }
-
                 CommandBase command = null;
+                var type = intermediateData.Type;
+                var dataList = intermediateData.DataList;
+
+                if (dataList == null || dataList.Count == 0) continue;
 
                 // コマンド種別に応じて管理クラスを生成
                 switch (type)
                 {
-                    case AdvCommandType.Text: command = this.GetTextCommand(type, rowDataList); break;
-                    case AdvCommandType.Character: command = this.GetCharacterCommand(type, rowDataList); break;
-                    case AdvCommandType.BackGround: command = this.GetBackGroundCommand(type, rowDataList); break;
-                    case AdvCommandType.Voice: command = this.GetVoiceCommand(type, rowDataList); break;
-                    case AdvCommandType.BGM: command = this.GetBgmCommand(type, rowDataList); break;
-                    case AdvCommandType.SelectEnd:
-                        command = this.GetSelectCommand(selectCommandValueList);
-                        selectCommandValueList.Clear(); // 保持していた値を破棄
-                        break;
-                    case AdvCommandType.SelectPoint: command = this.GetSelectPointCommand(type, rowDataList); break;
-                    case AdvCommandType.Jump: command = this.GetJumpCommand(type, rowDataList); break;
-                    case AdvCommandType.JumpPoint: command = this.GetJumpPointCommand(type, rowDataList); break;
+                    case AdvCommandType.Text: command = this.GetTextCommand(type, dataList[0]); break;
+                    case AdvCommandType.Character: command = this.GetCharacterCommand(type, dataList[0]); break;
+                    case AdvCommandType.BackGround: command = this.GetBackGroundCommand(type, dataList[0]); break;
+                    case AdvCommandType.Voice: command = this.GetVoiceCommand(type, dataList[0]); break;
+                    case AdvCommandType.BGM: command = this.GetBgmCommand(type, dataList[0]); break;
+                    case AdvCommandType.SelectEnd: command = this.GetSelectCommand(dataList); break;
+                    case AdvCommandType.SelectPoint: command = this.GetSelectPointCommand(type, dataList[0]); break;
+                    case AdvCommandType.Jump: command = this.GetJumpCommand(type, dataList[0]); break;
+                    case AdvCommandType.JumpPoint: command = this.GetJumpPointCommand(type, dataList[0]); break;
                 }
 
-                if (false) list.Add(command);
+                if (command != null) list.Add(command);    
             }
 
             return list;
         }
 
+# region 各Commandクラスの生成
         /// <summary>
         /// TextCommand取得
         /// </summary>
@@ -199,10 +163,9 @@ namespace Command
                 foreach (var rowData in rowDataList)
                 {
                     var enumValue = rowData[1];
-                    SelectSubCommandType type = SelectSubCommandType.None;
-                    if (string.IsNullOrEmpty(enumValue) ||
-                        !System.Enum.TryParse(enumValue, out type) ||
-                        !System.Enum.IsDefined(typeof(SelectSubCommandType), type))
+                    if (string.IsNullOrEmpty(enumValue)) continue; // 空文字の場合は何もしない
+                    if (!System.Enum.TryParse(enumValue, out SelectSubCommandType type) || // SelectSubCommandTypeに変換を試みる
+                        !System.Enum.IsDefined(typeof(SelectSubCommandType), type)) // 変換できた場合、定義されているか確認
                     {
                         // コマンドの識別ができない場合は何もしない
                         continue;
@@ -283,5 +246,6 @@ namespace Command
                 return null;
             }
         }
+# endregion
     }
 }
