@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using Command;
-using Command.Model;
+using Model.Command;
+using Repository;
 using UnityEngine;
 
 namespace Controller

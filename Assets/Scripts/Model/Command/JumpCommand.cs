@@ -1,24 +1,24 @@
-using Command.Enum;
+using Enums;
 
-namespace Command.Model
+namespace Model.Command
 {
     /// <summary>
-    /// 背景表示コマンドの管理クラス
+    /// ジャンプコマンドの管理クラス
     /// </summary>
-    public class BackGroundCommand : CommandBase
+    public class JumpCommand : CommandBase
     {
         /// <summary>
-        /// 表示背景D
+        /// ジャンプ地点のID
         /// </summary>
-        private readonly string _id;
-        public string Id => _id;
+        private readonly string _jumpPointId;
+        public string JumpPointId => _jumpPointId;
 
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        public BackGroundCommand(AdvCommandType advCommandType, string id) : base(advCommandType)
+        public JumpCommand(AdvCommandType advCommandType, string jumpPointId) : base(advCommandType)
         {
-            _id = id;
+            _jumpPointId = jumpPointId;
         }
 
         /// <summary>

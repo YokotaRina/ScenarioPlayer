@@ -1,14 +1,14 @@
-using Command.Enum;
+using Enums;
 
-namespace Command.Model
+namespace Model.Command
 {
     /// <summary>
-    /// 選択肢の分岐地点コマンドの管理クラス
+    /// ジャンプ先地点コマンドの管理クラス
     /// </summary>
-    public class SelectPointCommand : CommandBase
+    public class JumpPointCommand : CommandBase
     {
         /// <summary>
-        /// 分岐地点ID
+        /// ジャンプ先地点ID
         /// </summary>
         private readonly string _id;
         public string Id => _id;
@@ -16,7 +16,7 @@ namespace Command.Model
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        public SelectPointCommand(AdvCommandType advCommandType, string id) : base(advCommandType)
+        public JumpPointCommand(AdvCommandType advCommandType, string id) : base(advCommandType)
         {
             _id = id;
         }

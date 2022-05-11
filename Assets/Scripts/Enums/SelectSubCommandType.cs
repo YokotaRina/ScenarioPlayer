@@ -1,6 +1,6 @@
 using Utils;
 
-namespace Command.Enum
+namespace Enums
 {
     /// <summary>
     /// 選択肢のサブコマンドの種類

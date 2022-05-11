@@ -1,14 +1,14 @@
-using Command.Enum;
+using Enums;
 
-namespace Command.Model
+namespace Model.Command
 {
     /// <summary>
-    /// ボイス再生コマンドの管理クラス
+    /// 選択肢の分岐地点コマンドの管理クラス
     /// </summary>
-    public class VoiceCommand : CommandBase
+    public class SelectPointCommand : CommandBase
     {
         /// <summary>
-        /// 再生ボイスID
+        /// 分岐地点ID
         /// </summary>
         private readonly string _id;
         public string Id => _id;
@@ -16,7 +16,7 @@ namespace Command.Model
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        public VoiceCommand(AdvCommandType advCommandType, string id) : base(advCommandType)
+        public SelectPointCommand(AdvCommandType advCommandType, string id) : base(advCommandType)
         {
             _id = id;
         }

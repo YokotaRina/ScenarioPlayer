@@ -1,7 +1,6 @@
-using Command.Enum;
-using JetBrains.Annotations;
+using Enums;
 
-namespace Command.Model
+namespace Model.Command
 {
     /// <summary>
     /// テキスト表示コマンドの管理クラス

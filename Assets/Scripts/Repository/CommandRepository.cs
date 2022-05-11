@@ -1,9 +1,10 @@
 using System.Collections.Generic;
-using Command.Enum;
-using Command.Model;
 using Csv;
+using Enums;
+using Model.Command;
+using Model.Factory;
 
-namespace Command
+namespace Repository
 {
     /// <summary>
     /// コマンドのリポジトリ
