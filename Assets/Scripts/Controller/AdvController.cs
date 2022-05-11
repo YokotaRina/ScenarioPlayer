@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using Command;
 using Command.Model;
-using Csv;
 using UnityEngine;
 
 namespace Controller
@@ -19,14 +18,9 @@ namespace Controller
         /// <summary>
         /// 初期化
         /// </summary>
-        private void Initialize(string fileName)
+        public void Initialize(string fileName)
         {
-            var csvReader = new CsvReader();
-            var factory = new CommandFactory();
-
-            // コマンドリストの取得
-            csvReader.Normalize(fileName);
-            _commandList = factory.GetCommandList(csvReader);
+            _commandList = new CommandRepository().GetCommandList(fileName);
         }
 
         /// <summary>

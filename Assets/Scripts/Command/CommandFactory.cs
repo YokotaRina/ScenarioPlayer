@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using Command.Model;
 using Command.Enum;
-using Csv;
 using UnityEngine;
 
 namespace Command
@@ -10,103 +9,18 @@ namespace Command
     /// <summary>
     /// コマンド生成クラス
     /// </summary>
-    public class CommandFactory : IDisposable
+    public class CommandFactory
     {
         /// <summary>
-        /// コマンド管理クラス生成前の中間データ
+        /// 中間データからコマンドリストを生成する
         /// </summary>
-        private class CommandIntermediateData
-        {
-            /// <summary>
-            /// コマンド種別
-            /// </summary>
-            public AdvCommandType Type { get; private set; }
-
-            /// <summary>
-            /// 一コマンド生成に必要なデータリスト
-            /// </summary>
-            public List<string[]> DataList { get; private set; }
-
-            /// <summary>
-            /// コンストラクタ
-            /// </summary>
-            public CommandIntermediateData(AdvCommandType type, List<string[]> dataList)
-            {
-                Type = type;
-                DataList = dataList;
-            }
-        }
-
-        /// <summary>
-        /// 中間データのリスト
-        /// </summary>
-        private List<CommandIntermediateData> _intermediateDataList;
-
-        /// <summary>
-        /// コンストラクタ
-        /// </summary>
-        public CommandFactory()
-        {
-            _intermediateDataList = new List<CommandIntermediateData>();
-        }
-
-        /// <summary>
-        /// コマンドの一覧を取得
-        /// </summary>
-        /// <returns></returns>
-        public List<CommandBase> GetCommandList(CsvReader csvReader)
-        {
-            // 中間データの生成
-            this.CreateIntermediateData(csvReader);
-
-            // コマンドリストの生成
-            return this.CreateCommandList();
-        }
-
-        /// <summary>
-        /// 中間データ生成
-        /// </summary>
-        private void CreateIntermediateData(CsvReader csvReader)
-        {
-            var rowDataNum = csvReader.GetRowDataNum();
-            var dataList = new List<string[]>();
-
-            // csvから中間データを生成する
-            for (int row = 0; row < rowDataNum; row++)
-            {
-                var rowDataList = csvReader.GetData(row);
-
-                var enumValue = rowDataList[0];
-                if (string.IsNullOrEmpty(enumValue)) continue; // 空文字の場合は何もしない
-                if (!System.Enum.TryParse(enumValue, out AdvCommandType type) || // AdvCommandTypeに変換を試みる
-                    !System.Enum.IsDefined(typeof(AdvCommandType), type)) // 変換できた場合、定義されているか確認
-                {
-                    // コマンドの識別ができない場合は何もしない
-                    continue;
-                }
-
-                // データ注入
-                dataList.Add(rowDataList);
-
-                // 選択肢コマンドは複数行になっているのでSelectEndコマンドが出現するまで値を保持
-                if (type == AdvCommandType.Select) continue;
-
-                // 中間データ生成
-                _intermediateDataList.Add(new CommandIntermediateData(type, new List<string[]>(dataList)));
-                dataList.Clear();
-            }
-        }
-
-        /// <summary>
-        /// コマンドリストの生成
-        /// </summary>
-        private List<CommandBase> CreateCommandList()
+        public List<CommandBase> CreateCommandList(List<CommandRepository.CommandIntermediateData> intermediateDataList)
         {
             var list = new List<CommandBase>();
-            if (_intermediateDataList == null || _intermediateDataList.Count == 0) return list;
+            if (intermediateDataList == null || intermediateDataList.Count == 0) return list;
 
             // 中間データからコマンドリストを生成する
-            foreach (var intermediateData in _intermediateDataList)
+            foreach (var intermediateData in intermediateDataList)
             {
                 CommandBase command = null;
                 var type = intermediateData.Type;
@@ -134,7 +48,7 @@ namespace Command
             return list;
         }
 
-# region Command生成
+# region 各Commandクラスの生成
         /// <summary>
         /// TextCommand取得
         /// </summary>
@@ -249,9 +163,8 @@ namespace Command
                 foreach (var rowData in rowDataList)
                 {
                     var enumValue = rowData[1];
-                    SelectSubCommandType type = SelectSubCommandType.None;
                     if (string.IsNullOrEmpty(enumValue)) continue; // 空文字の場合は何もしない
-                    if (!System.Enum.TryParse(enumValue, out type) || // SelectSubCommandTypeに変換を試みる
+                    if (!System.Enum.TryParse(enumValue, out SelectSubCommandType type) || // SelectSubCommandTypeに変換を試みる
                         !System.Enum.IsDefined(typeof(SelectSubCommandType), type)) // 変換できた場合、定義されているか確認
                     {
                         // コマンドの識別ができない場合は何もしない
@@ -334,13 +247,5 @@ namespace Command
             }
         }
 # endregion
-
-        /// <summary>
-        /// Dispose
-        /// </summary>
-        public void Dispose()
-        {
-            _intermediateDataList.Clear();
-        }
     }
 }
