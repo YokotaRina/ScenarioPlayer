@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Csv;
 using Enums;
@@ -52,21 +53,22 @@ namespace Repository
         {
             // csv読み込み
             var csvReader = new CsvReader();
-            csvReader.Normalize(fileName);
+            csvReader.Normalize(CsvReader.CsvType.Scenario, fileName);
 
             var intermediateDataList = new List<CommandIntermediateData>();
             var rowDataNum = csvReader.GetRowDataNum();
             var dataList = new List<string[]>();
 
             // csvから中間データを生成する
-            for (int row = 0; row < rowDataNum; row++)
+            // ※1行目はヘッダーのため無視
+            for (int row = 1; row < rowDataNum; row++)
             {
                 var rowDataList = csvReader.GetData(row);
 
                 var enumValue = rowDataList[0];
                 if (string.IsNullOrEmpty(enumValue)) continue; // 空文字の場合は何もしない
-                if (!System.Enum.TryParse(enumValue, out AdvCommandType type) || // AdvCommandTypeに変換を試みる
-                    !System.Enum.IsDefined(typeof(AdvCommandType), type)) // 変換できた場合、定義されているか確認
+                if (!Enum.TryParse(enumValue, out AdvCommandType type) || // AdvCommandTypeに変換を試みる
+                    !Enum.IsDefined(typeof(AdvCommandType), type)) // 変換できた場合、定義されているか確認
                 {
                     // コマンドの識別ができない場合は何もしない
                     continue;

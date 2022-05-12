@@ -165,10 +165,10 @@ namespace Model.Factory
                 {
                     var enumValue = rowData[1];
                     if (string.IsNullOrEmpty(enumValue)) continue; // 空文字の場合は何もしない
-                    if (!System.Enum.TryParse(enumValue, out SelectSubCommandType type) || // SelectSubCommandTypeに変換を試みる
-                        !System.Enum.IsDefined(typeof(SelectSubCommandType), type)) // 変換できた場合、定義されているか確認
+                    if (!Enum.TryParse(enumValue, out SelectSubCommandType type) || // SelectSubCommandTypeに変換を試みる
+                        !Enum.IsDefined(typeof(SelectSubCommandType), type)) // 変換できた場合、定義されているか確認
                     {
-                        // コマンドの識別ができない場合は何もしない
+                        // SelectSubCommandTypeの識別ができない場合は何もしない
                         continue;
                     }
 

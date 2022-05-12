@@ -12,6 +12,16 @@ namespace Csv
     public class CsvReader : IDisposable
     {
         /// <summary>
+        /// csv種別
+        /// </summary>
+        public enum CsvType
+        {
+            Scenario = 1,
+            Character = 2,
+            Resource = 3
+        }
+
+        /// <summary>
         /// コメントコマンド判定用
         /// </summary>
         private static string COMMENT_COMMAND = "Comment";
@@ -29,13 +39,13 @@ namespace Csv
         /// <summary>
         /// 正規化
         /// </summary>
-        public void Normalize(string fileName)
+        public void Normalize(CsvType type, string fileName)
         {
             _fileName = fileName;
 
             // 読み込み
-            var path = Path.Combine(Directory.GetCurrentDirectory(), "Assets/Scenario");
-            var streamReader = new StreamReader($"{path}/{_fileName}");
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "Assets/MasterData");
+            var streamReader = new StreamReader($"{path}/{type}/{_fileName}");
 
             // 末尾まで繰り返す
             string line = "";
