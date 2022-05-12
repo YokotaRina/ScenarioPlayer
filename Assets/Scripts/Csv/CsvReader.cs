@@ -44,8 +44,14 @@ namespace Csv
             _fileName = fileName;
 
             // 読み込み
-            var path = Path.Combine(Directory.GetCurrentDirectory(), "Assets/MasterData");
-            var streamReader = new StreamReader($"{path}/{type}/{_fileName}");
+            var directory = Path.Combine(Directory.GetCurrentDirectory(), "Assets/MasterData");
+            var path = $"{directory}/{type}/{_fileName}";
+            if (!File.Exists(path))
+            {
+                Debug.LogError($"[{path}]ファイルが存在しません");
+                return;
+            }
+            var streamReader = new StreamReader(path);
 
             // 末尾まで繰り返す
             string line = "";

@@ -47,14 +47,14 @@ namespace Repository
         /// </summary>
         public List<CharacterBase> GetCharacterList()
         {
-            var intermediateDataDictionary = this.CreateIntermediateData();
+            var intermediateDataDictionary = this.CreateCharacterIntermediateData();
             return new CharacterFactory().CreateCharacterList(intermediateDataDictionary);
         }
 
         /// <summary>
         /// CSVから中間データ生成
         /// </summary>
-        private List<CharacterIntermediateData> CreateIntermediateData()
+        private List<CharacterIntermediateData> CreateCharacterIntermediateData()
         {
             // csv読み込み
             var csvReader = new CsvReader();
@@ -90,6 +90,20 @@ namespace Repository
             }
 
             return intermediateDataList;
+        }
+
+        /// <summary>
+        /// キャラクター表示位置リストを取得
+        /// </summary>
+        public List<PositionBase> GetPositionList()
+        {
+            // csv読み込み
+            var csvReader = new CsvReader();
+            csvReader.Normalize(CsvReader.CsvType.Character, "CharacterPosition.csv");
+
+            var list = csvReader.GetData();
+            list.RemoveAt(0); // 1行目はヘッダーのため削除
+            return new CharacterFactory().CreatePositionList(list);
         }
     }
 }

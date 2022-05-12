@@ -61,5 +61,46 @@ namespace Model.Factory
 
             return list;
         }
+
+        /// <summary>
+        /// CSVデータからキャラクター表示位置リストを生成する
+        /// </summary>
+        public List<PositionBase> CreatePositionList(List<string[]> rawDataList)
+        {
+            var list = new List<PositionBase>();
+            if (rawDataList == null || rawDataList.Count == 0) return list;
+
+            // csvデータからコマンドリストを生成する
+            foreach (var rawDara in rawDataList)
+            {
+                try
+                {
+                    var id = rawDara[0];
+
+                    var rawX = rawDara[1];
+                    var x = 0;
+                    if (!string.IsNullOrEmpty(rawX)) int.TryParse(rawX, out x);
+
+                    var rawY = rawDara[2];
+                    var y = 0;
+                    if (!string.IsNullOrEmpty(rawY)) int.TryParse(rawY, out y);
+
+                    var rawOrder = rawDara[3];
+                    var order = 0;
+                    if (!string.IsNullOrEmpty(rawOrder)) int.TryParse(rawOrder, out order);
+
+                    if (!string.IsNullOrEmpty(id))
+                    {
+                        list.Add(new PositionBase(id, x, y, order));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogError($"[{ex}]:PositionBase取得に失敗しました");
+                }
+            }
+
+            return list;
+        }
     }
 }
