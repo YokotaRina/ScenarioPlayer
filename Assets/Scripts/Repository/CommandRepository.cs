@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
+using Command;
 using Csv;
 using Enums;
-using Model.Command;
 using Model.Factory;
 
 namespace Repository

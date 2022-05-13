@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Enums;
 
-namespace Model.Command
+namespace Command
 {
     /// <summary>
     /// 選択肢コマンドの管理クラス

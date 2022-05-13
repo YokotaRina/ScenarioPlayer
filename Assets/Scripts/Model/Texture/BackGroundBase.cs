@@ -1,4 +1,4 @@
-namespace Model.BackGround
+namespace Model.Texture
 {
     /// <summary>
     /// 背景情報保持クラス
