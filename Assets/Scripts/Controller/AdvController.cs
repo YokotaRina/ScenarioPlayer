@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using Command;
 using Model.Character;
-using Model.Command;
+using Model.Sound;
+using Model.Texture;
 using Repository;
 using UnityEngine;
 
@@ -27,6 +29,16 @@ namespace Controller
         private List<PositionBase> _positionList;
 
         /// <summary>
+        /// 背景情報リスト
+        /// </summary>
+        private List<BackGroundBase> _backGroundList;
+
+        /// <summary>
+        /// ボイス情報リスト
+        /// </summary>
+        private List<VoiceBase> _voiceList;
+
+        /// <summary>
         /// 初期化
         /// </summary>
         public void Initialize(string fileName)
@@ -36,6 +48,10 @@ namespace Controller
             var characterRepository = new CharacterRepository();
             _characterList = characterRepository.GetCharacterList();
             _positionList = characterRepository.GetPositionList();
+
+            var resourceRepository = new ResourceRepository();
+            _backGroundList = resourceRepository.GetBackGroundList();
+            _voiceList = resourceRepository.GetVoiceList();
         }
 
         /// <summary>

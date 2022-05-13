@@ -1,6 +1,6 @@
 using Enums;
 
-namespace Model.Command
+namespace Command
 {
     /// <summary>
     /// コマンドのベースクラス
