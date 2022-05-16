@@ -1,5 +1,10 @@
-ID,キャラクター名,パターン,リソース
-1,猫,Normal,nekochan.png
-1,猫,Smile,smile_nekochan.png
-2,犬,Normal,wanchan.png
-3,ほげ,Normal,hoge.png
+ID,キャラクター名,パターン,リソース,スケール
+1,猫,Normal,cat_normal.png,1
+1,猫,Smile,cat_smile.png,1
+1,猫,Angry,cat_angry.png,1
+1,猫,Sad,cat_sad.png,1
+2,犬,Normal,dog_normal.png,1
+2,犬,Smile,dog_smile.png,1
+2,犬,Angry,dog_angry.png,1
+2,犬,Sad,dog_sad.png,1
+3,シャチ,Normal,orca_normal.png,2

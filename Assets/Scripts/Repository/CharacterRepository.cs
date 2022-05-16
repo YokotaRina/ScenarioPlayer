@@ -32,13 +32,19 @@ namespace Repository
             public readonly List<string[]> DataList;
 
             /// <summary>
+            /// スケール
+            /// </summary>
+            public readonly int Scale;
+
+            /// <summary>
             /// コンストラクタ
             /// </summary>
-            public CharacterIntermediateData(string id, string name, List<string[]> dataList)
+            public CharacterIntermediateData(string id, string name, List<string[]> dataList, int scale)
             {
                 Id = id;
                 Name = name;
                 DataList = dataList;
+                Scale = scale;
             }
         }
 
@@ -75,6 +81,10 @@ namespace Repository
 
                 if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(name)) continue; // idが空の場合は何もしない
 
+                var rawScale = rowDataList[3];
+                var scale = 0;
+                if (!string.IsNullOrEmpty(rawScale)) int.TryParse(rawScale, out scale);
+
                 // 一行前とIDが同じ場合
                 if (beforeId == id)
                 {
@@ -83,7 +93,7 @@ namespace Repository
                 }
                 else
                 {
-                    intermediateDataList.Add(new CharacterIntermediateData(id, name, new List<string[]> {rowDataList}));
+                    intermediateDataList.Add(new CharacterIntermediateData(id, name, new List<string[]> {rowDataList}, scale));
                 }
 
                 beforeId = id;
