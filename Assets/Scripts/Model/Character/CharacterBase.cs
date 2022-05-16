@@ -27,13 +27,20 @@ namespace Model.Character
         public Dictionary<FacePattern, string>  ResourceDictionary => _resourceDictionary;
 
         /// <summary>
+        /// 表示スケール
+        /// </summary>
+        private readonly int _scale;
+        public int Scale => _scale;
+
+        /// <summary>
         /// コンストラクタ
         /// </summary>
-        public CharacterBase(string id, string name, Dictionary<FacePattern, string> resourceDictionary)
+        public CharacterBase(string id, string name, Dictionary<FacePattern, string> resourceDictionary, int scale)
         {
             _id = id;
             _name = name;
             _resourceDictionary = resourceDictionary;
+            _scale = scale;
         }
     }
 }

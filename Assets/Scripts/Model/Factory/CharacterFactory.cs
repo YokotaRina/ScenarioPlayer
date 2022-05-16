@@ -26,6 +26,7 @@ namespace Model.Factory
                 var id = intermediateData.Id;
                 var name = intermediateData.Name;
                 var dataList = intermediateData.DataList;
+                var scale = intermediateData.Scale;
 
                 if (dataList == null || dataList.Count == 0) continue;
 
@@ -55,7 +56,7 @@ namespace Model.Factory
 
                 if (!string.IsNullOrEmpty(name) && resourceDictionary.Count != 0)
                 {
-                    list.Add(new CharacterBase(id, name, resourceDictionary));
+                    list.Add(new CharacterBase(id, name, resourceDictionary, scale));
                 }    
             }
 
