@@ -4,6 +4,7 @@ using Model.Character;
 using Model.Sound;
 using Model.Texture;
 using Repository;
+using TMPro;
 using UnityEngine;
 
 namespace Controller
@@ -13,6 +14,10 @@ namespace Controller
     /// </summary>
     public class AdvController : MonoBehaviour
     {
+        [SerializeField, Tooltip("メッセージテキスト")] private TextMeshProUGUI messageText = default;
+        [SerializeField, Tooltip("名前テキスト")] private TextMeshProUGUI nameText = default;
+        [SerializeField, Tooltip("名前欄")] private GameObject namePlate = default;
+
         /// <summary>
         /// コマンドリスト
         /// </summary>
