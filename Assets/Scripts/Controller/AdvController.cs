@@ -168,7 +168,16 @@ namespace Controller
         /// </summary>
         public void UpdateMessageText(TextCommand textCommand)
         {
-            messageText.text = textCommand.Text;
+            messageText.text = textCommand.GetMessageText();
+            if (string.IsNullOrEmpty(textCommand.Name))
+            {
+                namePlate.SetActive(false);
+            }
+            else
+            {
+                namePlate.SetActive(true);
+                nameText.text = textCommand.Name;
+            }
         }
 
         /// <summary>

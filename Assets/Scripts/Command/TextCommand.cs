@@ -51,6 +51,25 @@ namespace Command
         }
 
         /// <summary>
+        /// 表示テキスト取得
+        /// </summary>
+        /// <returns></returns>
+        public string GetMessageText()
+        {
+            if (_size != 0)
+            {
+                _text = string.Format(CHANGE_SIZE_TEXT_FORMAT, _size, _text);
+            }
+
+            if (!string.IsNullOrEmpty(_color))
+            {
+                _text = string.Format(CHANGE_COLOR_TEXT_FORMAT, _color, _text);
+            }
+
+            return _text;
+        }
+
+        /// <summary>
         /// 開始
         /// </summary>
         public override void Start(AdvController controller)
