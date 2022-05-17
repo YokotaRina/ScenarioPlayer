@@ -513,6 +513,7 @@ GameObject:
   - component: {fileID: 351383847}
   - component: {fileID: 351383849}
   - component: {fileID: 351383848}
+  - component: {fileID: 351383850}
   m_Layer: 5
   m_Name: MessageWindow
   m_TagString: Untagged
@@ -531,7 +532,6 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 1264267050}
   - {fileID: 991256958}
   m_Father: {fileID: 1895803140}
   m_RootOrder: 0
@@ -579,6 +579,27 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 351383846}
   m_CullTransparentMesh: 1
+--- !u!223 &351383850
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 351383846}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 1
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_AdditionalShaderChannelsFlag: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 5
+  m_TargetDisplay: 0
 --- !u!1 &384407397
 GameObject:
   m_ObjectHideFlags: 0
@@ -744,6 +765,7 @@ GameObject:
   - component: {fileID: 759946454}
   - component: {fileID: 759946458}
   - component: {fileID: 759946457}
+  - component: {fileID: 759946455}
   m_Layer: 5
   m_Name: CharacterBase (1)
   m_TagString: Untagged
@@ -770,6 +792,27 @@ RectTransform:
   m_AnchoredPosition: {x: -400, y: 90}
   m_SizeDelta: {x: 300, y: 600}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!223 &759946455
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 759946453}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 1
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_AdditionalShaderChannelsFlag: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 1
+  m_TargetDisplay: 0
 --- !u!114 &759946457
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1224,6 +1267,7 @@ GameObject:
   - component: {fileID: 991256958}
   - component: {fileID: 991256960}
   - component: {fileID: 991256959}
+  - component: {fileID: 991256961}
   m_Layer: 5
   m_Name: MessageText
   m_TagString: Untagged
@@ -1243,7 +1287,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 351383847}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -1347,6 +1391,27 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 991256957}
   m_CullTransparentMesh: 1
+--- !u!223 &991256961
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 991256957}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 1
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_AdditionalShaderChannelsFlag: 25
+  m_SortingLayerID: 0
+  m_SortingOrder: 6
+  m_TargetDisplay: 0
 --- !u!1 &1003837274
 GameObject:
   m_ObjectHideFlags: 0
@@ -1358,6 +1423,7 @@ GameObject:
   - component: {fileID: 1003837275}
   - component: {fileID: 1003837279}
   - component: {fileID: 1003837278}
+  - component: {fileID: 1003837276}
   m_Layer: 5
   m_Name: CharacterBase
   m_TagString: Untagged
@@ -1384,6 +1450,27 @@ RectTransform:
   m_AnchoredPosition: {x: -100, y: 90}
   m_SizeDelta: {x: 300, y: 600}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!223 &1003837276
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1003837274}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 1
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_AdditionalShaderChannelsFlag: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 2
+  m_TargetDisplay: 0
 --- !u!114 &1003837278
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1433,6 +1520,7 @@ GameObject:
   - component: {fileID: 1034114698}
   - component: {fileID: 1034114702}
   - component: {fileID: 1034114701}
+  - component: {fileID: 1034114699}
   m_Layer: 5
   m_Name: CharacterBase (2)
   m_TagString: Untagged
@@ -1459,6 +1547,27 @@ RectTransform:
   m_AnchoredPosition: {x: 350, y: 90}
   m_SizeDelta: {x: 300, y: 600}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!223 &1034114699
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1034114697}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 1
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_AdditionalShaderChannelsFlag: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 1
+  m_TargetDisplay: 0
 --- !u!114 &1034114701
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1580,6 +1689,7 @@ GameObject:
   - component: {fileID: 1264267050}
   - component: {fileID: 1264267052}
   - component: {fileID: 1264267051}
+  - component: {fileID: 1264267053}
   m_Layer: 5
   m_Name: NamePlate
   m_TagString: Untagged
@@ -1599,12 +1709,12 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1968553975}
-  m_Father: {fileID: 351383847}
-  m_RootOrder: 0
+  m_Father: {fileID: 1895803140}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -425, y: 150}
+  m_AnchoredPosition: {x: -425, y: -90}
   m_SizeDelta: {x: 400, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1264267051
@@ -1645,6 +1755,27 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1264267049}
   m_CullTransparentMesh: 1
+--- !u!223 &1264267053
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1264267049}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 1
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_AdditionalShaderChannelsFlag: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 6
+  m_TargetDisplay: 0
 --- !u!1 &1293698526
 GameObject:
   m_ObjectHideFlags: 0
@@ -1696,9 +1827,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c60edd9cc734233b9aba9428becfdb2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  messageText: {fileID: 0}
-  nameText: {fileID: 0}
-  namePlate: {fileID: 0}
+  messageText: {fileID: 991256959}
+  nameText: {fileID: 1968553976}
+  namePlate: {fileID: 1264267049}
 --- !u!1 &1407164806
 GameObject:
   m_ObjectHideFlags: 0
@@ -2350,6 +2481,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 351383847}
+  - {fileID: 1264267050}
   m_Father: {fileID: 1293698527}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2405,6 +2537,7 @@ GameObject:
   - component: {fileID: 1968553975}
   - component: {fileID: 1968553977}
   - component: {fileID: 1968553976}
+  - component: {fileID: 1968553978}
   m_Layer: 5
   m_Name: NameText
   m_TagString: Untagged
@@ -2528,6 +2661,27 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1968553974}
   m_CullTransparentMesh: 1
+--- !u!223 &1968553978
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1968553974}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 1
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_AdditionalShaderChannelsFlag: 25
+  m_SortingLayerID: 0
+  m_SortingOrder: 7
+  m_TargetDisplay: 0
 --- !u!1 &2018356369
 GameObject:
   m_ObjectHideFlags: 0
