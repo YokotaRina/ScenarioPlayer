@@ -46,11 +46,12 @@ namespace Controller
         private void OnStartButton()
         {
             // 画面切り替え
-            topObject.SetActive(false);
+            this.gameObject.SetActive(false);
             advController.gameObject.SetActive(true);
 
+            // ファイル名設定
             var fileName = fileList.options[fileList.value].text;
-            advController.Initialize(fileName);
+            advController.SetUp(fileName);
         }
     }
 }

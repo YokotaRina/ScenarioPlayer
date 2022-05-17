@@ -14,7 +14,7 @@ namespace Ruby
         /// <summary>
         /// ルビのサイズ(%)
         /// </summary>
-        private float _rubySize = 40f;
+        private float _rubySize = 50f;
 
         /// <summary>
         /// ルビ用テキストの上部へずらす量設定用開始タグ
@@ -39,7 +39,7 @@ namespace Ruby
         /// <summary>
         /// ルビ表示用のタグを生成
         /// </summary>
-        private void MakeRubyTag(RubySetting rubySetting)
+        public void MakeRubyTag(RubySetting rubySetting)
         {
             var rubyText = rubySetting.RubyText;
             if (string.IsNullOrEmpty(rubyText)) return;
