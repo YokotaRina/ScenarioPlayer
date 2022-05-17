@@ -1,4 +1,6 @@
+using Controller;
 using Enums;
+using Ruby;
 
 namespace Command
 {
@@ -10,7 +12,7 @@ namespace Command
         /// <summary>
         /// 表示テキスト
         /// </summary>
-        private readonly string _text;
+        private string _text;
         public string Text => _text;
 
         /// <summary>
@@ -49,10 +51,42 @@ namespace Command
         }
 
         /// <summary>
+        /// 表示テキスト取得
+        /// </summary>
+        /// <returns></returns>
+        public string GetMessageText()
+        {
+            if (_size != 0)
+            {
+                _text = string.Format(CHANGE_SIZE_TEXT_FORMAT, _size, _text);
+            }
+
+            if (!string.IsNullOrEmpty(_color))
+            {
+                _text = string.Format(CHANGE_COLOR_TEXT_FORMAT, _color, _text);
+            }
+
+            return _text;
+        }
+
+        /// <summary>
         /// 開始
         /// </summary>
-        public override void Start()
+        public override void Start(AdvController controller)
         {
+            // ルビの解析 → タグ置き換え
+            var rubySettingList = TagAnalyzer.GetRubySettingList(_text);
+            if (rubySettingList.Count > 0)
+            {
+                foreach (var rubySetting in rubySettingList)
+                {
+                    controller.RubyTagGenerator.MakeRubyTag(rubySetting);
+                    var afterText = rubySetting.GetRubyText();
+                    _text = _text.Replace($"<ruby={rubySetting.RubyText}>{rubySetting.TargetText}</ruby>", afterText);
+                }
+            }
+
+            controller.UpdateMessageText(this);
         }
 
         /// <summary>
@@ -60,6 +94,7 @@ namespace Command
         /// </summary>
         public override void End()
         {
+            base.SetEnd();
         }
     }
 }

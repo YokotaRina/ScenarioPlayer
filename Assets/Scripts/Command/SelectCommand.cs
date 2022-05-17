@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Controller;
 using Enums;
 
 namespace Command
@@ -65,7 +66,7 @@ namespace Command
         /// <summary>
         /// 開始
         /// </summary>
-        public override void Start()
+        public override void Start(AdvController controller)
         {
         }
 
