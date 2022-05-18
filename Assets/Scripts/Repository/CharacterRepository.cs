@@ -81,7 +81,7 @@ namespace Repository
 
                 if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(name)) continue; // idが空の場合は何もしない
 
-                var rawScale = rowDataList[3];
+                var rawScale = rowDataList[4];
                 var scale = 0;
                 if (!string.IsNullOrEmpty(rawScale)) int.TryParse(rawScale, out scale);
 

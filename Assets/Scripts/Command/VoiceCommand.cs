@@ -27,6 +27,7 @@ namespace Command
         /// </summary>
         public override void Start(AdvController controller)
         {
+            controller.PlayVoice(this);
         }
 
         /// <summary>
@@ -34,6 +35,7 @@ namespace Command
         /// </summary>
         public override void End()
         {
+            base.SetEnd();
         }
     }
 }

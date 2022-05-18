@@ -38,5 +38,19 @@ namespace Repository
             list.RemoveAt(0); // 1行目はヘッダーのため削除
             return new ResourceFactory().CreateVoiceList(list);
         }
+
+        /// <summary>
+        /// BGM情報リストを取得
+        /// </summary>
+        public List<BgmBase> GetBgmList()
+        {
+            // csv読み込み
+            var csvReader = new CsvReader();
+            csvReader.Normalize(CsvReader.CsvType.Resource, "Bgm.csv");
+
+            var list = csvReader.GetData();
+            list.RemoveAt(0); // 1行目はヘッダーのため削除
+            return new ResourceFactory().CreateBgmList(list);
+        }
     }
 }

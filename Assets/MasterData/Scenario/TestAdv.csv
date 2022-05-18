@@ -1,5 +1,5 @@
 command,parameter1,parameter2,parameter3,parameter4,parameter5,parameter6
-Character,1,通常,Center,,,
+BGM,1,,,,,
 Comment,"※別のタブでキャラクターを定義しておいて、ここではIDを指定するだけの想定。
 　パラメータ2で表情差分指定。
 　パラメータ3でポジション指定。
@@ -7,6 +7,8 @@ Comment,"※別のタブでキャラクターを定義しておいて、ここ�
 BackGround,1,,,,,
 Comment,※背景もキャラクターと同じように別タブ定義。,,,,,
 Text,コマンドタイプのフォーマットサンプルです。,,,,,
+Voice,1,,,,,
+Character,1,Normal,Center,,,
 Text,パラメータにはキャラ名、文字サイズ、カラーなどが指定できる想定です。→,猫,30,red,,
 Text,"一行一文の想定です。
 ここで改行を入れた場合は、一連の文章として表示される想定です。",,,,,
