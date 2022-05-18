@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using Command;
 using Enums;
 using Model.Character;
@@ -9,6 +11,7 @@ using Ruby;
 using Script.State;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Controller
 {
@@ -20,6 +23,11 @@ namespace Controller
         [SerializeField, Tooltip("メッセージテキスト")] private TextMeshProUGUI messageText = default;
         [SerializeField, Tooltip("名前テキスト")] private TextMeshProUGUI nameText = default;
         [SerializeField, Tooltip("名前欄")] private GameObject namePlate = default;
+        [SerializeField, Tooltip("背景")] private Image backGround = default;
+        [SerializeField, Tooltip("キャラクターベース")] private Image characterBase = default;
+        [SerializeField, Tooltip("ボイス用AudioSource")] AudioSource voicePlayer;
+        [SerializeField, Tooltip("BGM用AudioSource")] AudioSource bgmPlayer;
+
         [SerializeField, Tooltip("TOP")] private GameObject topObject = default;
         [SerializeField, Tooltip("ルビ表示用タグ生成器")] private RubyTagGenerator rubyTagGenerator = default;
         public RubyTagGenerator RubyTagGenerator => rubyTagGenerator;
@@ -51,6 +59,11 @@ namespace Controller
         /// ボイス情報リスト
         /// </summary>
         private List<VoiceBase> _voiceList;
+
+        /// <summary>
+        /// BGM情報リスト
+        /// </summary>
+        private List<BgmBase> _bgmList;
 
         /// <summary>
         /// 現在実行中のコマンド
@@ -101,6 +114,7 @@ namespace Controller
             var resourceRepository = new ResourceRepository();
             _backGroundList = resourceRepository.GetBackGroundList();
             _voiceList = resourceRepository.GetVoiceList();
+            _bgmList = resourceRepository.GetBgmList();
         }
 
         /// <summary>
@@ -181,6 +195,99 @@ namespace Controller
         }
 
         /// <summary>
+        /// 背景を更新
+        /// </summary>
+        public void UpdateBackGround(BackGroundCommand backGroundCommand)
+        {
+            var backGroundInfo = _backGroundList.FirstOrDefault(x => x.Id == backGroundCommand.Id);
+            if (backGroundInfo == null) return;
+
+            var path = $"BackGround/{backGroundInfo.Resource}";
+            var fullPath = $"Assets/Resources/{path}.png";
+            if (!File.Exists(fullPath)) return;
+
+            Sprite image = Resources.Load<Sprite>(path);
+            backGround.sprite = image;
+        }
+
+        /// <summary>
+        /// ボイス再生
+        /// </summary>
+        public void PlayVoice(VoiceCommand voiceCommand)
+        {
+            var voiceInfo = _voiceList.FirstOrDefault(x => x.Id == voiceCommand.Id);
+            if (voiceInfo == null) return;
+
+            var path = $"Voice/{voiceInfo.Resource}";
+            var fullPath = $"Assets/Resources/{path}.mp3";
+            if (!File.Exists(fullPath)) return;
+
+            AudioClip voice = Resources.Load<AudioClip>(path);
+            voicePlayer.clip = voice;
+            voicePlayer.Play();
+        }
+
+        /// <summary>
+        /// BGM再生
+        /// </summary>
+        public void PlayBgm(BgmCommand bgmCommand)
+        {
+            var bgmInfo = _bgmList.FirstOrDefault(x => x.Id == bgmCommand.Id);
+            if (bgmInfo == null) return;
+
+            var path = $"Bgm/{bgmInfo.Resource}";
+            var fullPath = $"Assets/Resources/{path}.mp3";
+            if (!File.Exists(fullPath)) return;
+
+            AudioClip bgm = Resources.Load<AudioClip>(path);
+            bgmPlayer.clip = bgm;
+            bgmPlayer.loop = bgmInfo.IsLoop;
+            bgmPlayer.Play();
+        }
+
+        /// <summary>
+        /// キャラクター表示
+        /// </summary>
+        public void DisplayCharacter(CharacterCommand characterCommand)
+        {
+            var id = characterCommand.Id;
+            var characterInfo = _characterList.FirstOrDefault(x => x.Id == id);
+            var positionInfo = _positionList.FirstOrDefault(x => x.Id == characterCommand.PositionId);
+            if (characterInfo == null || positionInfo == null) return;
+
+            var pattern = characterCommand.FacePattern;
+            var resource = string.Empty;
+            var resourceDictionary = characterInfo.ResourceDictionary;
+            if (resourceDictionary.ContainsKey(pattern))
+            {
+                resource = resourceDictionary[pattern];
+            }
+
+            if (string.IsNullOrEmpty(resource)) return;
+
+            var path = $"Character/{id}/{resource}";
+            var fullPath = $"Assets/Resources/{path}.png";
+            if (!File.Exists(fullPath)) return;
+
+            Sprite image = Resources.Load<Sprite>(path);
+
+            var character = Instantiate(characterBase, characterBase.transform.parent.transform);
+            character.gameObject.SetActive(true);
+            character.sprite = image;
+
+            var scale = characterInfo.Scale;
+            character.transform.localScale = new Vector3(scale, scale);
+
+            var canvas = character.GetComponent<Canvas>();
+            canvas.sortingOrder = positionInfo.Order;
+
+            Vector3 pos = character.transform.localPosition;
+            pos.x = positionInfo.X;    // ワールド座標を基準にした、x座標を1に変更
+            pos.y = positionInfo.Y;    // ワールド座標を基準にした、y座標を1に変更
+            character.transform.localPosition = pos;
+        }
+
+        /// <summary>
         /// Topへ戻る押下時
         /// </summary>
         private void ReturnTop()
@@ -211,6 +318,18 @@ namespace Controller
             {
                 _positionList.Clear();
                 _positionList = null;
+            }
+
+            if (_voiceList != null)
+            {
+                _voiceList.Clear();
+                _voiceList = null;
+            }
+
+            if (_bgmList != null)
+            {
+                _bgmList.Clear();
+                _bgmList = null;
             }
 
             _state = null;

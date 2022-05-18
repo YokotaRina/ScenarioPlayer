@@ -15,10 +15,10 @@ namespace Command
         public string Id => _id;
 
         /// <summary>
-        /// 表情パターンID
+        /// 表情パターン
         /// </summary>
-        private readonly string _patternId;
-        public string PatternId => _patternId;
+        private readonly FacePattern _facePattern;
+        public FacePattern FacePattern => _facePattern;
 
         /// <summary>
         /// 表示位置ID
@@ -29,10 +29,10 @@ namespace Command
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        public CharacterCommand(AdvCommandType advCommandType, string id, string patternId, string positionId) : base(advCommandType)
+        public CharacterCommand(AdvCommandType advCommandType, string id, FacePattern facePattern, string positionId) : base(advCommandType)
         {
             _id = id;
-            _patternId = patternId;
+            _facePattern = facePattern;
             _positionId = positionId;
         }
 
@@ -41,6 +41,7 @@ namespace Command
         /// </summary>
         public override void Start(AdvController controller)
         {
+            controller.DisplayCharacter(this);
         }
 
         /// <summary>
@@ -48,6 +49,7 @@ namespace Command
         /// </summary>
         public override void End()
         {
+            base.SetEnd();
         }
     }
 }
