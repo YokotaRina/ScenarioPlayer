@@ -83,10 +83,18 @@ namespace Model.Factory
             try
             {
                 var id = rowDataList[1];
-                var patternId = rowDataList[2];
                 var positionId = rowDataList[3];
 
-                return new CharacterCommand(type, id, patternId, positionId);
+                var enumValue = rowDataList[2];
+                if (string.IsNullOrEmpty(enumValue)) throw new Exception("string→Enum 変換エラー");; // 空文字の場合は何もしない
+                if (!Enum.TryParse(enumValue, out FacePattern facePattern) || // FacePatternに変換を試みる
+                    !Enum.IsDefined(typeof(FacePattern), facePattern)) // 変換できた場合、定義されているか確認
+                {
+                    // FacePatternの識別ができない場合は何もしない
+                    throw new Exception("string→Enum 変換エラー");
+                }
+
+                return new CharacterCommand(type, id, facePattern, positionId);
             }
             catch (Exception ex)
             {
