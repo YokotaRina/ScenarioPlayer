@@ -31,6 +31,13 @@ namespace Command
         public string CharacterId => _characterId;
 
         /// <summary>
+        /// 表示キャラクター表情パターン
+        /// ※Noneの場合は非表示
+        /// </summary>
+        private readonly FacePattern _facePattern;
+        public FacePattern FacePattern => _facePattern;
+
+        /// <summary>
         /// 再生ボイスID
         /// ※空の場合は何も再生しない
         /// </summary>
@@ -52,6 +59,7 @@ namespace Command
             List<Tuple<string, string>> choiceWordList,
             string text,
             string characterId,
+            FacePattern facePattern,
             string voiceId,
             string effectId
         ) : base(advCommandType)
@@ -59,6 +67,7 @@ namespace Command
             _choiceWordList = choiceWordList;
             _text = text;
             _characterId = characterId;
+            _facePattern = facePattern;
             _voiceId = voiceId;
             _effectId = effectId;
         }
@@ -68,6 +77,7 @@ namespace Command
         /// </summary>
         public override void Start(AdvController controller)
         {
+            controller.DisplaySelectGroup(this);
         }
 
         /// <summary>
@@ -75,6 +85,7 @@ namespace Command
         /// </summary>
         public override void End()
         {
+            base.SetEnd();
         }
     }
 }

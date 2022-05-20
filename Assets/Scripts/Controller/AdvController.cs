@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -27,6 +28,9 @@ namespace Controller
         [SerializeField, Tooltip("キャラクターベース")] private Image characterBase = default;
         [SerializeField, Tooltip("ボイス用AudioSource")] AudioSource voicePlayer;
         [SerializeField, Tooltip("BGM用AudioSource")] AudioSource bgmPlayer;
+        [SerializeField, Tooltip("選択肢グループ")] GameObject selectGroup;
+        [SerializeField, Tooltip("選択肢ボタンベース")] Button selectButtonBase;
+        [SerializeField, Tooltip("選択肢用キャラクター")] Image selectCharacter;
 
         [SerializeField, Tooltip("TOP")] private GameObject topObject = default;
         [SerializeField, Tooltip("ルビ表示用タグ生成器")] private RubyTagGenerator rubyTagGenerator = default;
@@ -34,11 +38,25 @@ namespace Controller
 
         // ファイル名
         private string _fileName = default;
+        // カウンター用
+        private int _counter;
+        // ジャンプ地点
+        private string _jumpPoint;
+
+        /// <summary>
+        /// 選択肢ボタンの保持リスト
+        /// </summary>
+        private List<Button> _selectButtonList;
+
+        /// <summary>
+        /// キャラクターの保持リスト
+        /// </summary>
+        private List<Image> _characterImageList;
 
         /// <summary>
         /// コマンドリスト
         /// </summary>
-        private Queue<CommandBase> _commandQueue;
+        private List<CommandBase> _commandList;
 
         /// <summary>
         /// キャラクターリスト
@@ -81,6 +99,8 @@ namespace Controller
             DoCommand,  // コマンド実行
             CommandProcess,  // コマンド実行中
             EndCommand, // コマンド実行終了
+            SelectJump, // 選択肢のジャンプ
+            Jump, // 選択肢のジャンプ
             AllDone, // 前終了
         }
 
@@ -105,7 +125,10 @@ namespace Controller
         /// </summary>
         private void Initialize()
         {
-            _commandQueue = new Queue<CommandBase>(new CommandRepository().GetCommandList(_fileName));
+            _characterImageList = new List<Image>();
+            _counter = 0;
+            _jumpPoint = String.Empty;
+            _commandList = new CommandRepository().GetCommandList(_fileName);
 
             var characterRepository = new CharacterRepository();
             _characterList = characterRepository.GetCharacterList();
@@ -139,19 +162,19 @@ namespace Controller
                     break;
                 case State.DoCommand:
                     // コマンド実行
-                    _currentCommand = _commandQueue.Dequeue();
+                    _currentCommand = _commandList[_counter];
                     _currentCommand.Start(this);
 
+                    _counter++;
                     _state.SetState((int) State.CommandProcess);
                     break;
                 case State.CommandProcess:
-                    // 何もしない
-                    // タップ判定
                     if (_currentCommand.AdvCommandType == AdvCommandType.Text)
                     {
+                        // タップ判定
                         if (Input.GetMouseButtonDown(0))
                         {
-                            if (_commandQueue.Count == 0)
+                            if (_commandList.Count <= _counter)
                             {
                                 _state.SetState((int) State.AllDone);
                             }
@@ -161,14 +184,72 @@ namespace Controller
                             }
                         }
                     }
+                    else if (_currentCommand.AdvCommandType == AdvCommandType.Select)
+                    {
+                        _state.SetState((int) State.SelectWait);
+                    }
+                    else if (_currentCommand.AdvCommandType == AdvCommandType.Jump)
+                    {
+                        _state.SetState((int) State.Jump);
+                    }
                     else
                     {
-                        _state.SetState((int)State.DoCommand);
+                        _state.SetState((int) State.DoCommand);
                     }
                     break;
                 case State.EndCommand:
                     _currentCommand.End();
-                    _state.SetState((int)State.DoCommand);
+                    _state.SetState((int) State.DoCommand);
+                    break;
+                case State.SelectJump:
+                    // キャラクターの非表示
+                    selectCharacter.gameObject.SetActive(false);
+                    foreach (var characterImage in _characterImageList)
+                    {
+                        characterImage.gameObject.SetActive(true);
+                    }
+
+                    // ボタンの破棄
+                    foreach (var selectButton in _selectButtonList)
+                    {
+                        Destroy(selectButton.gameObject);
+                    }
+
+                    _selectButtonList.Clear();
+                    selectGroup.SetActive(false);
+
+                    // 指定のコマンドまでジャンプ
+                    var targetCommand = _commandList
+                        .Select((command, i) => new {Content = command, Index = i})
+                        .Where(x => x.Content.AdvCommandType == AdvCommandType.SelectPoint)
+                        .FirstOrDefault(x => (x.Content as SelectPointCommand)?.Id == _jumpPoint);
+
+                    if (targetCommand != null)
+                    {
+                        _counter = targetCommand.Index;
+                        _state.SetState((int) State.DoCommand);
+                    }
+                    else
+                    {
+                        _state.SetState((int) State.DoCommand);
+                    }
+                    break;
+                case State.Jump:
+                    // 指定のコマンドまでジャンプ
+                    targetCommand = _commandList
+                        .Select((command, i) => new {Content = command, Index = i})
+                        .Where(x => x.Content.AdvCommandType == AdvCommandType.JumpPoint)
+                        .FirstOrDefault(x => (x.Content as JumpPointCommand)?.Id == _jumpPoint);
+
+                    if (targetCommand != null)
+                    {
+                        _counter = targetCommand.Index;
+                        _state.SetState((int) State.DoCommand);
+                    }
+                    else
+                    {
+                        _state.SetState((int) State.DoCommand);
+                    }
                     break;
                 case State.AllDone:
                     this.ReturnTop();
@@ -272,6 +353,7 @@ namespace Controller
             Sprite image = Resources.Load<Sprite>(path);
 
             var character = Instantiate(characterBase, characterBase.transform.parent.transform);
+            _characterImageList.Add(character);
             character.gameObject.SetActive(true);
             character.sprite = image;
 
@@ -288,6 +370,91 @@ namespace Controller
         }
 
         /// <summary>
+        /// 選択肢表示
+        /// </summary>
+        public void DisplaySelectGroup(SelectCommand selectCommand)
+        {
+            // キャラクターの非表示
+            foreach (var characterImage in _characterImageList)
+            {
+                characterImage.gameObject.SetActive(false);
+            }
+
+            // 選択肢の生成
+            _selectButtonList = new List<Button>();
+            selectGroup.SetActive(true);
+            foreach (var choiceWord in selectCommand.ChoiceWordList)
+            {
+                var button = Instantiate(selectButtonBase, selectButtonBase.transform.parent.transform);
+                _selectButtonList.Add(button);
+                button.gameObject.SetActive(true);
+                var buttonText = button.GetComponentInChildren<TextMeshProUGUI>();
+                buttonText.text = choiceWord.Item1;
+
+                button.onClick.AddListener(() =>
+                {
+                    _jumpPoint = choiceWord.Item2;
+                    _state.SetState((int)State.SelectJump);
+                });
+            }
+
+            // メッセージテキスト表示
+            messageText.text = selectCommand.Text;
+
+            // キャラクター表示
+            var characterId = selectCommand.CharacterId;
+            if (!string.IsNullOrEmpty(characterId))
+            {
+                var characterInfo = _characterList.FirstOrDefault(x => x.Id == characterId);
+                if (characterInfo == null) return;
+                selectCharacter.gameObject.SetActive(true);
+
+                var pattern = selectCommand.FacePattern;
+                var resource = string.Empty;
+                var resourceDictionary = characterInfo.ResourceDictionary;
+                if (resourceDictionary.ContainsKey(pattern))
+                {
+                    resource = resourceDictionary[pattern];
+                }
+
+                if (string.IsNullOrEmpty(resource)) return;
+
+                var path = $"Character/{characterId}/{resource}";
+                var fullPath = $"Assets/Resources/{path}.png";
+                if (!File.Exists(fullPath)) return;
+                
+                Sprite image = Resources.Load<Sprite>(path);
+
+                selectCharacter.gameObject.SetActive(true);
+                selectCharacter.sprite = image;
+            }
+
+            // ボイス再生
+            var voiceId = selectCommand.VoiceId;
+            if (!string.IsNullOrEmpty(voiceId))
+            {
+                var voiceInfo = _voiceList.FirstOrDefault(x => x.Id == voiceId);
+                if (voiceInfo == null) return;
+
+                var path = $"Voice/{voiceInfo.Resource}";
+                var fullPath = $"Assets/Resources/{path}.mp3";
+                if (!File.Exists(fullPath)) return;
+
+                AudioClip voice = Resources.Load<AudioClip>(path);
+                voicePlayer.clip = voice;
+                voicePlayer.Play();    
+            }
+        }
+
+        /// <summary>
+        /// ジャンプ地点設定
+        /// </summary>
+        public void SetJumpPoint(JumpCommand jumpCommand)
+        {
+            _jumpPoint = jumpCommand.JumpPointId;
+        }
+
+        /// <summary>
         /// Topへ戻る押下時
         /// </summary>
         private void ReturnTop()
@@ -295,6 +462,13 @@ namespace Controller
             // 画面切り替え
             this.gameObject.SetActive(false);
             topObject.SetActive(true);
+
+            // キャラクター保持リストの破棄
+            foreach (var characterImage in _characterImageList)
+            {
+                Destroy(characterImage.gameObject);
+            }
+            _characterImageList.Clear();
         }
 
         /// <summary>
@@ -302,10 +476,10 @@ namespace Controller
         /// </summary>
         private void OnDestroy()
         {
-            if (_commandQueue != null)
+            if (_commandList != null)
             {
-                _commandQueue.Clear();
-                _commandQueue = null;
+                _commandList.Clear();
+                _commandList = null;
             }
 
             if (_characterList != null)
@@ -330,6 +504,28 @@ namespace Controller
             {
                 _bgmList.Clear();
                 _bgmList = null;
+            }
+
+            if (_characterImageList != null)
+            {
+                foreach (var characterImage in _characterImageList)
+                {
+                    Destroy(characterImage.gameObject);
+                }
+
+                _characterImageList.Clear();
+                _characterImageList = null;
+            }
+
+            if (_selectButtonList != null)
+            {
+                foreach (var selectButton in _selectButtonList)
+                {
+                    Destroy(selectButton.gameObject);
+                }
+
+                _selectButtonList.Clear();
+                _selectButtonList = null;
             }
 
             _state = null;
