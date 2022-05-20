@@ -167,6 +167,7 @@ namespace Model.Factory
                 var choiceWordList = new List<Tuple<string, string>>();
                 var text = string.Empty;
                 var characterId = string.Empty;
+                var facePattern = FacePattern.None;
                 var voiceId = string.Empty;
                 var effectId = string.Empty;
                 foreach (var rowData in rowDataList)
@@ -187,13 +188,23 @@ namespace Model.Factory
                             choiceWordList.Add(new Tuple<string, string>(rowData[2], rowData[3]));
                             break;
                         case SelectSubCommandType.Text: text = rowData[2]; break;
-                        case SelectSubCommandType.Character: characterId = rowData[2]; break;
+                        case SelectSubCommandType.Character:
+                            characterId = rowData[2];
+                            enumValue = rowData[3];
+                            if (string.IsNullOrEmpty(enumValue)) throw new Exception("string→Enum 変換エラー");; // 空文字の場合は何もしない
+                            if (!Enum.TryParse(enumValue, out facePattern) || // FacePatternに変換を試みる
+                                !Enum.IsDefined(typeof(FacePattern), facePattern)) // 変換できた場合、定義されているか確認
+                            {
+                                // FacePatternの識別ができない場合は何もしない
+                                throw new Exception("string→Enum 変換エラー");
+                            }
+                            break;
                         case SelectSubCommandType.Voice: voiceId = rowData[2]; break;
                         case SelectSubCommandType.Effect: effectId = rowData[2]; break;
                     }
                 }
 
-                return new SelectCommand(AdvCommandType.Select, choiceWordList, text, characterId, voiceId, effectId);
+                return new SelectCommand(AdvCommandType.Select, choiceWordList, text, characterId, facePattern, voiceId, effectId);
             }
             catch (Exception ex)
             {

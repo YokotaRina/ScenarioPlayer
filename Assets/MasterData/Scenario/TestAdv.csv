@@ -19,7 +19,7 @@ Text,"また、文字の一部を変更したい場合は<color=blue>こんな�
 Select,ChoiceWord,選択肢1,1,,,
 Select,ChoiceWord,選択肢2,2,,,
 Select,ChoiceWord,選択肢3,3,,,
-Select,Character,1,,,,
+Select,Character,1,Smile,,,
 Select,Voice,1,,,,
 Select,Text,選択肢を選んでね。,,,,
 SelectEnd,,,,,,
