@@ -48,6 +48,7 @@ namespace Controller
             // 画面切り替え
             this.gameObject.SetActive(false);
             advController.gameObject.SetActive(true);
+            advController.ButtonGroup.SetActive(true);
 
             // ファイル名設定
             var fileName = fileList.options[fileList.value].text;
