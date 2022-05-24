@@ -5,6 +5,7 @@ using System.Linq;
 using Command;
 using Enums;
 using Model.Character;
+using Model.Log;
 using Model.Sound;
 using Model.Texture;
 using Repository;
@@ -31,6 +32,13 @@ namespace Controller
         [SerializeField, Tooltip("選択肢グループ")] GameObject selectGroup;
         [SerializeField, Tooltip("選択肢ボタンベース")] Button selectButtonBase;
         [SerializeField, Tooltip("選択肢用キャラクター")] Image selectCharacter;
+
+        [SerializeField, Tooltip("ボタングループ")] GameObject buttonGroup;
+        public GameObject ButtonGroup => buttonGroup;
+
+        [SerializeField, Tooltip("ログボタン")] Button logButton;
+        [SerializeField, Tooltip("ログウィンドウ")] GameObject logWindow;
+        [SerializeField, Tooltip("ログテキスト")] TextMeshProUGUI logMessage;
 
         [SerializeField, Tooltip("TOP")] private GameObject topObject = default;
         [SerializeField, Tooltip("ルビ表示用タグ生成器")] private RubyTagGenerator rubyTagGenerator = default;
@@ -89,6 +97,11 @@ namespace Controller
         private CommandBase _currentCommand;
 
         /// <summary>
+        /// ログ保持用のリスト
+        /// </summary>
+        private List<LogInfo> _logInfoList;
+
+        /// <summary>
         /// ステートの種類
         /// </summary>
         private enum State
@@ -100,8 +113,11 @@ namespace Controller
             CommandProcess,  // コマンド実行中
             EndCommand, // コマンド実行終了
             SelectJump, // 選択肢のジャンプ
-            Jump, // 選択肢のジャンプ
-            AllDone, // 前終了
+            Jump, // ジャンプ
+            AllDone, // 全終了
+
+            OpenLog, // ログ表示
+            CloseLog, // ログ非表示
         }
 
         /// <summary>
@@ -129,6 +145,7 @@ namespace Controller
             _counter = 0;
             _jumpPoint = String.Empty;
             _commandList = new CommandRepository().GetCommandList(_fileName);
+            _logInfoList = new List<LogInfo>();
 
             var characterRepository = new CharacterRepository();
             _characterList = characterRepository.GetCharacterList();
@@ -138,6 +155,11 @@ namespace Controller
             _backGroundList = resourceRepository.GetBackGroundList();
             _voiceList = resourceRepository.GetVoiceList();
             _bgmList = resourceRepository.GetBgmList();
+
+            logButton.onClick.AddListener(() =>
+            {
+                _state.SetState((int) State.OpenLog);
+            });
         }
 
         /// <summary>
@@ -172,7 +194,7 @@ namespace Controller
                     if (_currentCommand.AdvCommandType == AdvCommandType.Text)
                     {
                         // タップ判定
-                        if (Input.GetMouseButtonDown(0))
+                        if (Input.GetMouseButtonUp(0))
                         {
                             if (_commandList.Count <= _counter)
                             {
@@ -254,6 +276,32 @@ namespace Controller
                 case State.AllDone:
                     this.ReturnTop();
                     break;
+                case State.OpenLog:
+                    logWindow.SetActive(true);
+                    var text = string.Empty;
+                    foreach (var logInfo in _logInfoList)
+                    {
+                        if (string.IsNullOrEmpty(logInfo.Name))
+                        {
+                            text += $" {logInfo.Text}\n\n";
+                        }
+                        else
+                        {
+                            text += $"{logInfo.Name}\n";
+                            text += $" {logInfo.Text}\n\n";
+                        }
+                    }
+                    logMessage.text = text;
+                    _state.SetState((int) State.CloseLog);
+                    break;
+                case State.CloseLog:
+                    // タップ判定
+                    if (Input.GetMouseButtonUp(0))
+                    {
+                        logWindow.SetActive(false);
+                        _state.SetState((int) State.CommandProcess);
+                    }
+                    break;
             }
             _state.Update(Time.unscaledDeltaTime);
         }
@@ -263,16 +311,23 @@ namespace Controller
         /// </summary>
         public void UpdateMessageText(TextCommand textCommand)
         {
-            messageText.text = textCommand.GetMessageText();
-            if (string.IsNullOrEmpty(textCommand.Name))
+            var message = textCommand.GetMessageText();
+            var name = textCommand.Name;
+
+            messageText.text = message;
+
+            if (string.IsNullOrEmpty(name))
             {
                 namePlate.SetActive(false);
             }
             else
             {
                 namePlate.SetActive(true);
-                nameText.text = textCommand.Name;
+                nameText.text = name;
             }
+
+            // ログの保持
+            _logInfoList.Add(new LogInfo(name, message));
         }
 
         /// <summary>
@@ -395,11 +450,15 @@ namespace Controller
                 {
                     _jumpPoint = choiceWord.Item2;
                     _state.SetState((int)State.SelectJump);
+
+                    // ログの保持
+                    _logInfoList.Add(new LogInfo("選択肢", buttonText.text));
                 });
             }
 
             // メッセージテキスト表示
-            messageText.text = selectCommand.Text;
+            var text = selectCommand.Text;
+            messageText.text = text;
 
             // キャラクター表示
             var characterId = selectCommand.CharacterId;
@@ -444,6 +503,12 @@ namespace Controller
                 voicePlayer.clip = voice;
                 voicePlayer.Play();    
             }
+
+            if (!string.IsNullOrEmpty(text))
+            {
+                // ログの保持
+                _logInfoList.Add(new LogInfo(string.Empty, text));   
+            }
         }
 
         /// <summary>
@@ -461,6 +526,7 @@ namespace Controller
         {
             // 画面切り替え
             this.gameObject.SetActive(false);
+            buttonGroup.SetActive(false);
             topObject.SetActive(true);
 
             // キャラクター保持リストの破棄
@@ -526,6 +592,12 @@ namespace Controller
 
                 _selectButtonList.Clear();
                 _selectButtonList = null;
+            }
+
+            if (_logInfoList != null)
+            {
+                _logInfoList.Clear();
+                _logInfoList = null;
             }
 
             _state = null;
